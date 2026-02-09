@@ -10,11 +10,11 @@
     <PackageId>DataTables.AspNet.AspNetCoreV2</PackageId>
     <PackageTags>DataTables;DataTables.Mvc;DataTables.AspNet;AspNetCore</PackageTags>
     <PackageReleaseNotes>Updated model binder to not break on missing column name. Updated dependencies and framework.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/Avaruz/datatables.aspnet</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/tasketechnology/datatables.aspnet</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Avaruz/datatables.aspnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/tasketechnology/datatables.aspnet</RepositoryUrl>
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -22,9 +22,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.AspNet.Core\DataTables.AspNet.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 </Project>
