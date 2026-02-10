@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 
 namespace DataTables.AspNet.AspNetCore
@@ -70,71 +71,72 @@ namespace DataTables.AspNet.AspNetCore
     /// <returns></returns>
     public override string ToString()
     {
-      using (var stringWriter = new System.IO.StringWriter())
-      using (var jsonWriter = new Utf8JsonWriter((System.Buffers.IBufferWriter<byte>)stringWriter))
+      using (var stream = new MemoryStream())
       {
-        if (IsSuccessResponse())
+        using (var jsonWriter = new Utf8JsonWriter(stream))
         {
-          // Start json object.
-          jsonWriter.WriteStartObject();
-
-          // Draw
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Draw);
-          jsonWriter.WriteNumberValue(Draw);
-
-          // TotalRecords
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.TotalRecords);
-          jsonWriter.WriteNumberValue(TotalRecords);
-
-          // TotalRecordsFiltered
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.TotalRecordsFiltered);
-          jsonWriter.WriteNumberValue(TotalRecordsFiltered);
-
-          // Data
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Data);
-          jsonWriter.WriteRawValue(SerializeData(Data));
-
-          // AdditionalParameters
-          if (DataTables.AspNet.AspNetCore.Configuration.Options.IsResponseAdditionalParametersEnabled && AdditionalParameters != null)
+          if (IsSuccessResponse())
           {
-            foreach (var keypair in AdditionalParameters)
+            // Start json object.
+            jsonWriter.WriteStartObject();
+
+            // Draw
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Draw);
+            jsonWriter.WriteNumberValue(Draw);
+
+            // TotalRecords
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.TotalRecords);
+            jsonWriter.WriteNumberValue(TotalRecords);
+
+            // TotalRecordsFiltered
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.TotalRecordsFiltered);
+            jsonWriter.WriteNumberValue(TotalRecordsFiltered);
+
+            // Data
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Data);
+            jsonWriter.WriteRawValue(SerializeData(Data));
+
+            // AdditionalParameters
+            if (DataTables.AspNet.AspNetCore.Configuration.Options.IsResponseAdditionalParametersEnabled && AdditionalParameters != null)
             {
-              jsonWriter.WriteString(keypair.Key, JsonSerializer.Serialize(keypair.Value));
+              foreach (var keypair in AdditionalParameters)
+              {
+                jsonWriter.WriteString(keypair.Key, JsonSerializer.Serialize(keypair.Value));
+              }
             }
+
+            // End json object
+            jsonWriter.WriteEndObject();
+          }
+          else
+          {
+            // Start json object.
+            jsonWriter.WriteStartObject();
+
+            // Draw
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Draw);
+            jsonWriter.WriteNumberValue(Draw);
+
+            // Error
+            jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Error);
+            jsonWriter.WriteStringValue(Error);
+
+            // AdditionalParameters
+            if (DataTables.AspNet.AspNetCore.Configuration.Options.IsResponseAdditionalParametersEnabled && AdditionalParameters != null)
+            {
+              foreach (var keypair in AdditionalParameters)
+              {
+                jsonWriter.WriteString(keypair.Key, JsonSerializer.Serialize(keypair.Value));
+              }
+            }
+
+            // End json object
+            jsonWriter.WriteEndObject();
           }
 
-          // End json object
-          jsonWriter.WriteEndObject();
+          jsonWriter.Flush();
         }
-        else
-        {
-          // Start json object.
-          jsonWriter.WriteStartObject();
-
-          // Draw
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Draw);
-          jsonWriter.WriteNumberValue(Draw);
-
-          // Error
-          jsonWriter.WritePropertyName(Configuration.Options.ResponseNameConvention.Error);
-          jsonWriter.WriteStringValue(Error);
-
-          // AdditionalParameters
-          if (DataTables.AspNet.AspNetCore.Configuration.Options.IsResponseAdditionalParametersEnabled && AdditionalParameters != null)
-          {
-            foreach (var keypair in AdditionalParameters)
-            {
-              jsonWriter.WriteString(keypair.Key, JsonSerializer.Serialize(keypair.Value));
-            }
-          }
-
-          // End json object
-          jsonWriter.WriteEndObject();
-        }
-
-        jsonWriter.Flush();
-
-        return stringWriter.ToString();
+        return System.Text.Encoding.UTF8.GetString(stream.ToArray());
       }
     }
     /// <summary>
