@@ -12,16 +12,10 @@
     <PackageTags>DataTables;DataTables.Mvc;DataTables.AspNet;Mvc;AspNet;WebApi</PackageTags>
     <PackageReleaseNotes>Updated dependencies and framework.</PackageReleaseNotes>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Avaruz/datatables.aspnet</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/tasketechnology/datatables.aspnet</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Avaruz/datatables.aspnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/tasketechnology/datatables.aspnet</RepositoryUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
 </Project>
